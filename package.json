@@ -1,6 +1,6 @@
 {
   "name": "delegato",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "A mixin that provides a @delegates class method.",
   "main": "lib/delegator.js",
   "scripts": {
