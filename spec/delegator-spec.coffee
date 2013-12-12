@@ -1,36 +1,58 @@
 Delegator = require '../src/delegator'
 
 describe "Delegator", ->
-  [TestClass, a] = []
+  [TestClass, TestSubclass] = []
 
   beforeEach ->
     class TestClass
       Delegator.includeInto(this)
-      getB: -> @b
 
-    a = new TestClass
-    a.b = {x: 1, getY: -> 2}
+    class TestSubclass extends TestClass
 
-  it "can delegate methods and properties to a field on the current object", ->
-    TestClass.delegates 'x', 'getY', to: 'b'
+  describe ".delegatesProperties", ->
+    it "can delegate a property to the value of a property on the current object", ->
+      TestClass.delegatesProperties 'a', toProperty: 'b'
 
-    expect(a.x).toBe 1
-    expect(a.getY()).toBe 2
+      object1 = new TestClass
+      object1.b = {a: 1}
+      expect(object1.a).toBe 1
 
-    a.b.x = 3
-    expect(a.x).toBe 3
+      object2 = new TestSubclass
+      object2.b = {a: 2}
+      expect(object2.a).toBe 2
 
-    a.x = 4
-    expect(a.b.x).toBe 4
+    it "can delegate a property to the result of a method on the current object", ->
+      TestClass.delegatesProperties 'a', toMethod: 'getB'
+      TestClass::getB = -> @b
 
-  it "can delegate methods and properties to the result of a method on the current object", ->
-    TestClass.delegates 'x', 'getY', to: 'getB'
+      object1 = new TestClass
+      object1.b = {a: 1}
+      expect(object1.a).toBe 1
 
-    expect(a.x).toBe 1
-    expect(a.getY()).toBe 2
+      object2 = new TestSubclass
+      object2.b = {a: 2}
+      expect(object2.a).toBe 2
 
-    a.b.x = 3
-    expect(a.x).toBe 3
+  describe ".delegatesMethods", ->
+    it "can delegate a method to the value of a property on the current object ", ->
+      TestClass.delegatesMethods 'a', toProperty: 'b'
 
-    a.x = 4
-    expect(a.b.x).toBe 4
+      object1 = new TestClass
+      object1.b = {a: (v) -> 1 + v}
+      expect(object1.a(1)).toBe 2
+
+      object2 = new TestSubclass
+      object2.b = {a: (v) -> 1 + 2}
+      expect(object2.a(1)).toBe 3
+
+    it "can delegate a method to the result of a method on the current object ", ->
+      TestClass.delegatesMethods 'a', toMethod: 'getB'
+      TestClass::getB = -> @b
+
+      object1 = new TestClass
+      object1.b = {a: (v) -> 1 + v}
+      expect(object1.a(1)).toBe 2
+
+      object2 = new TestSubclass
+      object2.b = {a: (v) -> 1 + 2}
+      expect(object2.a(1)).toBe 3
