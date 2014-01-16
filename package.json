@@ -29,7 +29,7 @@
     }
   ],
   "dependencies": {
-    "mixto": "0.3.0"
+    "mixto": "1.x"
   },
   "devDependencies": {
     "jasmine-focused": "~0.14.0",
