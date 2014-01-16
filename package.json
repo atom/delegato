@@ -16,10 +16,8 @@
   },
   "homepage": "http://atom.github.io/delegato",
   "keywords": [
-    "event-emitter",
-    "events",
-    "subscribe",
-    "subscriber"
+    "delegate",
+    "delegates"
   ],
   "author": "Nathan Sobo",
   "licenses": [
